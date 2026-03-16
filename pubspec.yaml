@@ -45,6 +45,7 @@ dependencies:
 
   # Dev-only Networking
   pretty_dio_logger: 1.4.0
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:

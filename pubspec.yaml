@@ -1,0 +1,68 @@
+name: flutter_project_structure_setup
+description: A clean, professional Flutter starter template.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: 9.1.1
+  bloc: ^9.2.0
+
+  # Networking
+  dio: ^5.9.2
+
+  # Functional Programming
+  dartz: 0.10.1
+
+  # Dependency Injection
+  get_it: ^9.2.1
+  injectable: ^2.7.1+4
+
+  # Code Generation Annotations
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.11.0
+
+  # Routing
+  go_router: ^17.1.0
+
+  # Localization
+  intl: ^0.20.2
+
+  # Local Storage
+  flutter_secure_storage: ^10.0.0
+
+  # Connectivity
+  connectivity_plus: ^7.0.0
+
+  # Dev-only Networking
+  pretty_dio_logger: 1.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^6.0.0
+
+  # Code Generation Tools
+  build_runner: ^2.12.2
+  injectable_generator: ^2.12.1
+  freezed: ^3.2.5
+  json_serializable: ^6.13.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/

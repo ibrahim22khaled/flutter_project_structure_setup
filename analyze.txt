@@ -1,0 +1,12 @@
+﻿Analyzing flutter_project_structure_setup...
+
+  error - lib\app.dart:2:8 - Target of URI doesn't exist: 'package:flutter_gen/gen_l10n/app_localizations.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\app.dart:27:9 - The values in a const list literal must be constants. Try removing the keyword 'const' from the list literal. - non_constant_list_element
+  error - lib\app.dart:27:9 - Undefined name 'AppLocalizations'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\app.dart:38:16 - Undefined name 'AppLocalizations'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+  error - lib\core\extensions\context_ext.dart:2:8 - Target of URI doesn't exist: 'package:flutter_gen/gen_l10n/app_localizations.dart'. Try creating the file referenced by the URI, or try using a URI for a file that does exist. - uri_does_not_exist
+  error - lib\core\extensions\context_ext.dart:11:3 - Undefined class 'AppLocalizations'. Try changing the name to the name of an existing class, or creating a class with the name 'AppLocalizations'. - undefined_class
+  error - lib\core\extensions\context_ext.dart:11:32 - Undefined name 'AppLocalizations'. Try correcting the name to one that is defined, or defining the name. - undefined_identifier
+   info - lib\features\auth\data\repositories\auth_repository_impl.dart:51:8 - Missing a required trailing comma. Try adding a trailing comma. - require_trailing_commas
+
+8 issues found.

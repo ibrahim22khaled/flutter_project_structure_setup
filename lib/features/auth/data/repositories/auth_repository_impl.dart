@@ -44,13 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
       // E.g., if login returned a separate token field.
       // await localDataSource.cacheToken('fake_jwt_token_for_example');
 
-      return Right(
-        User(
-          id: userModel.id,
-          email: userModel.email,
-          name: userModel.name,
-        ),
-      );
+      return Right(userModel.toEntity());
     } on DioException catch (e) {
       return Left(FailureHandler.handleDioException(e));
     } catch (e) {

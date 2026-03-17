@@ -1,121 +1,80 @@
-# Flutter Starter Template
+# 🚀 Professional Flutter Starter Template
 
-## 1. Architecture diagram
+A production-ready, clean-architecture starter template for Flutter developers. Designed for scalability, testability, and maintainability.
 
-```mermaid
-graph TD
-    classDef presentation fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    classDef domain fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
-    classDef data fill:#fff3e0,stroke:#e65100,stroke-width:2px;
-    classDef core fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+---
 
-    UI[UI / Screens / Widgets]:::presentation
-    Cubit[State Management / Cubits]:::presentation
-    
-    UseCase[Use Cases]:::domain
-    Entity[Entities]:::domain
-    RepoInterface[Repository Interfaces]:::domain
+## 🏗️ Architecture Overview
 
-    RepoImpl[Repository Implementations]:::data
-    RemoteDS[Remote Data Source]:::data
-    LocalDS[Local Data Source]:::data
-    Model[Models / DTOs]:::data
+This project follows **Clean Architecture** principles, separated into four distinct layers:
 
-    NetworkInfo[Network Info / Connectivity]:::core
-    ApiClient[API Client / Dio]:::core
-    DI[Dependency Injection]:::core
+### 1. Presentation Layer (UI & Logic)
+*   **Cubits**: Manages state using the BLoC pattern.
+*   **Widgets/Screens**: Pure UI components.
+*   *Rule*: NOT allowed to import from the Data layer directly.
 
-    %% Presentation Layer
-    UI --> Cubit
-    %% Domain Layer
-    Cubit --> UseCase
-    UseCase --> RepoInterface
-    UseCase --> Entity
-    %% Data Layer
-    RepoImpl -. implements .-> RepoInterface
-    RepoImpl --> RemoteDS
-    RepoImpl --> LocalDS
-    RepoImpl --> Model
-    Model -. maps to .-> Entity
-    
-    %% Core Layer dependencies
-    RepoImpl --> NetworkInfo
-    RemoteDS --> ApiClient
+### 2. Domain Layer (The Brain)
+*   **Entities**: Plain Dart objects representing business models.
+*   **Usecases**: Specific application business rules.
+*   **Repository Interfaces**: Contracts defined for data operations.
+*   *Rule*: The core of the app. Has ZERO dependencies on other layers.
 
-    subgraph "Presentation Layer"
-        UI
-        Cubit
-    end
-    %% Description: Responsible for UI and state only. NOT allowed to import from the data layer directly.
+### 3. Data Layer (The Provider)
+*   **Repositories Implementations**: Concrete implementation of domain contracts.
+*   **Models (DTOs)**: JSON-serializable objects with mapping to entities.
+*   **DataSources**: Raw data providers (Remote/Local).
+*   *Rule*: Responsible for fetching and caching data. Converts Models to Entities.
 
-    subgraph "Domain Layer"
-        UseCase
-        Entity
-        RepoInterface
-    end
-    %% Description: Responsible for business rules and use-cases. NOT allowed to know about Dio, Flutter widgets, or databases.
+### 4. Core Layer (The Infrastructure)
+*   Network info, custom loggers, and dependency injection setups.
 
-    subgraph "Data Layer"
-        RepoImpl
-        RemoteDS
-        LocalDS
-        Model
-    end
-    %% Description: Responsible for API calls and local storage. NOT allowed to contain business logic or UI.
+---
 
-    subgraph "Core Layer"
-        NetworkInfo
-        ApiClient
-        DI
-    end
-```
+## 🛠️ Core Dependencies
 
-## 2. Setup
+| Package | Purpose |
+| :--- | :--- |
+| `flutter_bloc` | State management using Cubits for predictable logic. |
+| `dio` | Powerful HTTP client for API interactions. |
+| `get_it` & `injectable` | Service locator and DI for clean dependency management. |
+| `freezed` | Code generation for immutable classes and unions. |
+| `go_router` | Declarative routing system. |
+| `dartz` | Functional programming (Either) for error handling. |
 
-Run these commands in this exact order:
+---
 
-```bash
-flutter pub get
-dart run build_runner build --delete-conflicting-outputs
-flutter run
-```
+## 🚶 Step-by-Step Feature Implementation (The "Products" Example)
 
-## 3. How to add a new feature
+To build a new feature (e.g., "Products"), follow this workflow:
 
-Follow this 6-step checklist to cleanly implement a new feature:
+### 1. Domain Layer (Start Here)
+1.  **Entity**: Create `domain/entities/product.dart`. A plain class for your data.
+2.  **Repository Interface**: Create `domain/repositories/products_repository.dart` defining the `getProducts()` contract.
+3.  **UseCase**: Create `domain/usecases/get_products.dart` that calls the repository.
 
-1. **Step 1:** Create a new folder under `lib/features/your_feature/` (e.g., `lib/features/profile/`).
-2. **Step 2:** Define the core entity in `domain/entities/` (Plain Dart class, no JSON serialization).
-3. **Step 3:** Define the abstract repository interface in `domain/repositories/`.
-4. **Step 4:** Write the use-case(s) in `domain/usecases/` that call the repository.
-5. **Step 5:** Implement the repository in `data/repositories/`.
-   - Inject `NetworkInfo` via constructor.
-   - Always check `isConnected` *before* making remote calls.
-6. **Step 6:** Build the state management (Cubit) and UI (Screen) in `presentation/`.
+### 2. Data Layer
+1.  **Model**: Create `data/models/product_model.dart` with `@freezed`.
+    > **Pro-Tip**: Add a `toEntity()` method in your model for a cleaner repository.
+2.  **DataSource**: Create `data/datasources/products_remote_datasource.dart` using Dio.
+3.  **Repository Impl**: Implement the interface in `data/repositories/products_repository_impl.dart`.
 
-## 4. Common errors and fixes
+### 3. Presentation Layer
+1.  **Cubit**: Create `presentation/cubit/products_cubit.dart` to handle loading/success/error states.
+2.  **UI**: Build your screen in `presentation/screens/products_screen.dart` using `BlocBuilder`.
 
-*   **`build_runner` conflicts:**
-    *   **Fix:** Run `dart run build_runner build --delete-conflicting-outputs`
-*   **`get_it` not registered / `No GetIt implementation found`:**
-    *   **Fix:** Did you call `await configureDependencies();` before `runApp()` in `main.dart`?
-*   **GoRouter redirect loop:**
-    *   **Fix:** Check your redirect logic. Ensure that the `AuthCubit` emits `AuthAuthenticated` before navigating, and that you aren't unconditionally redirecting to the same page.
-*   **`flutter_secure_storage` crashing on Android:**
-    *   **Fix:** Ensure you have added `minSdkVersion 18` (or higher) in your `android/app/build.gradle`.
-*   **`connectivity_plus` returns connected but API still fails:**
-    *   **Fix:** `connectivity_plus` checks the active network interface (e.g., Wi-Fi turned on), not actual pingable internet access (e.g., behind a captive portal). Always handle `DioException` gracefully too.
+---
 
-## 5. Logging guide
+## 🚦 Getting Started
 
-We use a custom wrapper in `core/utils/logger.dart` instead of standard `print()`.
+1.  **Get Packages**: `flutter pub get`
+2.  **Generate Code**: `dart run build_runner build --delete-conflicting-outputs`
+3.  **Run l10n**: `flutter gen-l10n`
+4.  **Launch**: `flutter run`
 
-*   `logInfo()` → Normal app events ("User logged in", "Data fetched").
-*   `logWarning()` → Something unexpected happened but the app didn't crash.
-*   `logError()` → Caught exceptions (always pass the error/stacktrace object).
-*   `logDebug()` → Temporary output for local development. Remove before submitting a PR.
-*   **To upgrade to Crashlytics:** Edit *only* `core/utils/logger.dart`. The rest of the app will automatically log to the new service.
+---
 
-## 6. When to consider Melos monorepo
+## 📝 Best Practices
 
-If you join a large team or build times exceed 2 minutes, read: [melos.invertase.io](https://melos.invertase.io/)
+*   **Localization**: Add keys to `lib/l10n/app_en.arb` and `app_ar.arb`, then run `flutter gen-l10n`.
+*   **Error Handling**: Use the `Failure` class and `Either` type to handle errors without throwing exceptions everywhere.
+*   **Dependency Injection**: Use `@injectable` and `@lazySingleton` for automatic registration.

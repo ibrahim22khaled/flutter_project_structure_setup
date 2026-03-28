@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 // Note: These imports will show errors until Part 3 is completed.
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
-import '../../features/auth/presentation/cubit/auth_state.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/splash_onboarding/screens/splash_screen.dart';
 import '../di/injection.dart';
@@ -30,19 +29,20 @@ final GoRouter appRouter = GoRouter(
     final isSplash = state.matchedLocation == '/';
 
     // If still checking auth (loading/initial) and we are on splash, stay on splash.
-    if (authState is AuthInitial || authState is AuthLoading) {
+    if (authState.authStatus.isInitial || authState.authStatus.isLoading) {
       if (!isSplash) return '/';
       return null;
     }
 
     // If unauthenticated and we are not on the login screen, redirect to login.
-    if (authState is AuthUnauthenticated || authState is AuthError) {
+    // authState.authStatus.data == null means not authenticated.
+    if (authState.authStatus.isFailure || (authState.authStatus.isSuccess && authState.authStatus.data == null)) {
       if (!isLoggingIn) return '/login';
       return null;
     }
 
     // If authenticated and trying to access login or splash, redirect to home.
-    if (authState is AuthAuthenticated) {
+    if (authState.authStatus.isSuccess && authState.authStatus.data != null) {
       if (isLoggingIn || isSplash) return '/home';
       return null;
     }

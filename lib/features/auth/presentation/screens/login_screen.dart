@@ -42,12 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             // Show a snackbar only when an error occurs
-            if (state is AuthError) {
-              AppToasts.error(context, message: state.message);
+            if (state.authStatus.isFailure) {
+              AppToasts.error(context, message: state.authStatus.errorMessage ?? 'Error');
             }
           },
           builder: (context, state) {
-            final isLoading = state is AuthLoading;
+            final isLoading = state.authStatus.isLoading;
 
             return Padding(
               padding: const EdgeInsets.all(16.0),

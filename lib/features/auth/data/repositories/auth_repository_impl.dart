@@ -48,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e) {
       return Left(FailureHandler.handleDioException(e));
     } catch (e) {
-      return const Left(ServerFailure('An unexpected error occurred.'));
+      return const Left(ServerFailure(message: 'An unexpected error occurred.'));
     }
   }
 
@@ -58,7 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
       await localDataSource.clearToken();
       return const Right(null);
     } catch (e) {
-      return const Left(CacheFailure('Failed to clear local token.'));
+      return const Left(CacheFailure(message: 'Failed to clear local token.'));
     }
   }
 
@@ -78,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       return const Right(null);
     } catch (e) {
-      return const Left(CacheFailure('Failed to load cached token.'));
+      return const Left(CacheFailure(message: 'Failed to load cached token.'));
     }
   }
 }

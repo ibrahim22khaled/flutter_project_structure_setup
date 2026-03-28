@@ -26,6 +26,9 @@ import '../../features/auth/domain/usecases/get_cached_user_usecase.dart'
 import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/domain/usecases/logout_usecase.dart' as _i48;
 import '../../features/auth/presentation/cubit/auth_cubit.dart' as _i117;
+import '../helpers/local_storage/language_prefrence_helper.dart' as _i61;
+import '../localization/app_language_cubit.dart' as _i811;
+import '../localization/localization_container.dart' as _i430;
 import '../network/api_client.dart' as _i557;
 import '../network/auth_interceptor.dart' as _i908;
 import '../network/network_info.dart' as _i932;
@@ -46,6 +49,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i895.Connectivity>(() => coreModule.connectivity);
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => coreModule.secureStorage);
+    gh.lazySingleton<_i430.LocalizationContainer>(
+        () => _i430.LocalizationContainer());
+    gh.lazySingleton<_i61.LanguagePreferencesHelper>(
+        () => _i61.LanguagePreferencesHelper(gh<_i558.FlutterSecureStorage>()));
+    gh.lazySingleton<_i811.AppLanguageCubit>(() => _i811.AppLanguageCubit(
+          gh<_i61.LanguagePreferencesHelper>(),
+          gh<_i430.LocalizationContainer>(),
+        ));
     gh.lazySingleton<_i932.NetworkInfo>(
         () => _i932.NetworkInfoImpl(gh<_i895.Connectivity>()));
     gh.factory<_i908.AuthInterceptor>(

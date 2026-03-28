@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project_structure_setup/shared/utils/app_toasts.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../shared/widgets/loading_button.dart';
@@ -9,7 +10,7 @@ import '../cubit/auth_state.dart';
 /// LEARNING NOTES:
 /// Responsible for: UI and state only.
 /// NOT allowed to: import from the data layer directly.
-/// 
+///
 /// PURPOSE: The screen where users enter their credentials.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,9 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             // Show a snackbar only when an error occurs
             if (state is AuthError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-              );
+              AppToasts.error(context, message: state.message);
             }
           },
           builder: (context, state) {
